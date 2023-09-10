@@ -2,23 +2,28 @@
 #define HITTABLE_H
 
 #include "ray.h"
-#include "raytracer.h"
 
+//<<<<<<ch10-2 add>>>>>>>
+#include "raytracer.h"
 class material;
 
 class hit_record
 {
 public:
-    point3 p; // intersection point
+    point3 p;
     vec3 normal;
-    shared_ptr<material> mat_ptr;
-    double t; // intersection solution
+    double t;
 
-    bool front_face; //?
+    //<<<<<<ch10-2 add>>>>>>>
+    shared_ptr<material> mat;
 
+    // ch6-4 add
+    bool front_face;
     void set_face_normal(const ray &r, const vec3 &outward_normal)
     {
-        // NOTE: outward_normal은 항상 unit length를 가져야한다.
+        // Sets the hit record normal vector.
+        // NOTE: the parameter `outward_normal` is assumed to have unit length.
+
         front_face = dot(r.direction(), outward_normal) < 0;
         normal = front_face ? outward_normal : -outward_normal;
     }
@@ -29,7 +34,9 @@ class hittable
 public:
     virtual ~hittable() = default;
 
-    virtual bool hit(const ray &r, double ray_tmin, double ray_tmax, hit_record &rec) const = 0;
+    // ====ch6-8 out&add====
+    // virtual bool hit(const ray &r, double ray_tmin, double ray_tmax, hit_record &rec) const = 0;
+    virtual bool hit(const ray &r, interval ray_t, hit_record &rec) const = 0;
 };
 
 #endif
